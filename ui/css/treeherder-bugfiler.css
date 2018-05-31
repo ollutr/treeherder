@@ -5,6 +5,23 @@
     padding: 20px;
 }
 
+#modalProductFinderButton {
+    margin: -4px 0 0 5px;
+    line-height: 16px;
+}
+
+#suggestedProducts {
+    margin-left: 17px;
+}
+
+#suggestedProducts > .form-group {
+    margin-bottom: .25rem;
+}
+
+#failureSummaryGroup {
+    margin-top: 40px;
+}
+
 #modalSummarylabel {
     margin-top: -5px;
 }
@@ -53,15 +70,6 @@
     visibility: hidden;
 }
 
-#modalBottomDiv {
-    padding:5px;
-    width:650px;
-}
-
-#modalBottomDiv button {
-    /* float:right; */
-}
-
 #modalFailureList {
     width: 80%;
     padding: 5px;
@@ -89,6 +97,10 @@
     padding-top: 10px;
     padding-right:10.5%;
     float: right;
+}
+
+#modalRelatedBugs > input {
+    margin-right: 3px;
 }
 
 #unhelpfulSummaryReason > div:first-child {
