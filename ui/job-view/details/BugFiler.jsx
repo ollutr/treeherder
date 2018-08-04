@@ -394,76 +394,75 @@ export default class BugFiler extends React.Component {
           <ModalHeader toggle={toggle}>Intermittent Bug Filer</ModalHeader>
           <ModalBody>
             <form id="modalForm">
-              <input
-                name="modalProductFinderSearch"
-                id="modalProductFinderSearch"
-                onKeyDown={this.productSearchEnter}
-                onChange={evt => this.setState({ productSearch: evt.target.value })}
-                type="text"
-                placeholder="Firefox"
-              />
-              <Tooltip
-                target="modalProductFinderSearch"
-                isOpen={tooltipOpen.modalProductFinderSearch}
-                toggle={() => this.toggleTooltip('modalProductFinderSearch')}
-              >Manually search for a product</Tooltip>
-              <Button
-                name="modalProductFinderButton"
-                color="secondary"
-                id="modalProductFinderButton"
-                type="button"
-                onClick={this.findProduct}
-              >Find Product</Button>
+              <div className="d-inline-flex">
+                <Input
+                  name="modalProductFinderSearch"
+                  id="modalProductFinderSearch"
+                  onKeyDown={this.productSearchEnter}
+                  onChange={evt => this.setState({ productSearch: evt.target.value })}
+                  type="text"
+                  placeholder="Firefox"
+                  className="flex-fill flex-grow-1"
+                />
+                <Tooltip
+                  target="modalProductFinderSearch"
+                  isOpen={tooltipOpen.modalProductFinderSearch}
+                  toggle={() => this.toggleTooltip('modalProductFinderSearch')}
+                >Manually search for a product</Tooltip>
+                <Button
+                  name="modalProductFinderButton"
+                  color="secondary"
+                  id="modalProductFinderButton"
+                  className="ml-1 btn-sm"
+                  type="button"
+                  onClick={this.findProduct}
+                >Find Product</Button>
+              </div>
               <div>
                 {!!productSearch && searching && <div id="productSearchSpinner">
                   <span className="fa fa-spinner fa-pulse th-spinner-lg" />Searching {productSearch}
                 </div>}
-                <FormGroup id="suggestedProducts" tag="fieldset">
-                  {suggestedProducts.map(product => (<FormGroup key={`modalProductSuggestion${product}`}>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        value={product}
-                        checked={product === selectedProduct}
-                        onChange={evt => this.setState({ selectedProduct: evt.target.value })}
-                        name="productGroup"
-                        id={`modalProductSuggestion${product}`}
-                      />{product}
-                    </Label>
-                  </FormGroup>))}
+                <FormGroup id="suggestedProducts" tag="fieldset" className="mt-1">
+                  {suggestedProducts.map(product => (
+                    <div className="ml-4" key={`modalProductSuggestion${product}`}>
+                      <Label check>
+                        <Input
+                          type="radio"
+                          value={product}
+                          checked={product === selectedProduct}
+                          onChange={evt => this.setState({ selectedProduct: evt.target.value })}
+                          name="productGroup"
+                          id={`modalProductSuggestion${product}`}
+                        />{product}
+                      </Label>
+                    </div>
+                  ))}
                 </FormGroup>
               </div>
-              <div id="failureSummaryGroup" className="collapsed">
+              <div id="failureSummaryGroup" className="d-flex mb-1">
                 {!!unhelpfulSummaryReason && <div id="unhelpfulSummaryReason">
-                  <div>
+                  <div className="text-danger">
                     <span
-                      className="fa fa-info-circle"
+                      className="fa fa-warning"
                       id="unhelpful-summary-reason"
                     />Warning: {unhelpfulSummaryReason}
                     <Tooltip
                       target="unhelpful-summary-reason"
                       isOpen={tooltipOpen.unhelpfulSummaryReason}
                       toggle={() => this.toggleTooltip('unhelpfulSummaryReason')}
-                    >
-                      This can cause poor bug suggestions to be generated
-                    </Tooltip>
+                    >This can cause poor bug suggestions to be generated</Tooltip>
                   </div>
-                  {searchTerms.map(term => <div key={term}>{term}</div>)}
+                  {searchTerms.map(term => <div className="text-monospace pl-3" key={term}>{term}</div>)}
                 </div>}
                 <label id="modalSummarylabel" htmlFor="summary">Summary:</label>
-                <input
+                <Input
                   id="modalSummary"
+                  className="flex-grow-1 ml-1"
                   type="text"
                   placeholder="Intermittent..."
                   pattern=".{0,255}"
                   onChange={evt => this.setState({ summary: evt.target.value })}
                   value={summary}
-                />
-                <span id="modalSummaryLength">{summary.length}</span>
-                <i
-                  onClick={() => this.setState({ isFilerSummaryVisible: !isFilerSummaryVisible })}
-                  className={`fa fa-lg pointable ${isFilerSummaryVisible ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`}
-                  id="toggle-failure-lines"
                 />
                 <Tooltip
                   target="toggle-failure-lines"
@@ -472,18 +471,29 @@ export default class BugFiler extends React.Component {
                 >
                   {isFilerSummaryVisible ? 'Show all failure lines for this job' : 'Hide all failure lines for this job'}
                 </Tooltip>
-                {isFilerSummaryVisible && <span>
-                  <textarea
-                    id="modalFailureList"
-                    value={thisFailure}
-                    onChange={evt => this.setState({ thisFailure: evt.target.value })}
-                  />
-                </span>}
+                <i
+                  onClick={() => this.setState({ isFilerSummaryVisible: !isFilerSummaryVisible })}
+                  className={`fa fa-lg pointable align-bottom pt-2 ml-1 ${isFilerSummaryVisible ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'}`}
+                  id="toggle-failure-lines"
+                />
+                <span
+                  id="modalSummaryLength"
+                  className={`ml-1 font-weight-bold lg ${summary.length > 255 ? 'text-danger' : 'text-success'}`}
+                >{summary.length}</span>
               </div>
-              <div id="modalLogLinkCheckboxes">
+              {isFilerSummaryVisible && <span>
+                <Input
+                  id="modalFailureList"
+                  className="w-100"
+                  type="textarea"
+                  value={thisFailure}
+                  onChange={evt => this.setState({ thisFailure: evt.target.value })}
+                />
+              </span>}
+              <div id="modalLogLinkCheckboxes" className="ml-5">
                 <div>
                   <label>
-                    <input
+                    <Input
                       id="modalParsedLog"
                       type="checkbox"
                       checked={checkedLogLinks.includes(parsedLog)}
@@ -494,7 +504,7 @@ export default class BugFiler extends React.Component {
                 </div>
                 <div>
                   <label>
-                    <input
+                    <Input
                       id="modalFullLog"
                       type="checkbox"
                       checked={checkedLogLinks.includes(fullLog)}
@@ -504,7 +514,7 @@ export default class BugFiler extends React.Component {
                   </label>
                 </div>
                 {!!reftestUrl && <div><label id="modalReftestLogLabel">
-                  <input
+                  <Input
                     id="modalReftestLog"
                     type="checkbox"
                     checked={checkedLogLinks.includes(reftestUrl)}
@@ -515,26 +525,28 @@ export default class BugFiler extends React.Component {
               </div>
               <div id="modalCommentDiv">
                 <label id="modalCommentlabel" htmlFor="modalComment">Comment:</label>
-                <textarea
+                <Input
                   onChange={evt => this.setState({ comment: evt.target.value })}
                   id="modalComment"
                   type="textarea"
                   placeholder=""
+                  className="h-100"
                 />
               </div>
-              <div id="modalExtras">
-                <label>
-                  <input
-                    id="modalIsIntermittent"
-                    onChange={() => this.setState({ isIntermittent: !isIntermittent })}
-                    type="checkbox"
-                    checked={isIntermittent}
-                  />
-                  This is an intermittent failure
-                </label>
-
-                <div id="modalRelatedBugs">
-                  <input
+              <div id="modalExtras" className="d-inline-flex mt-2 ml-5">
+                <div className="mt-2">
+                  <label>
+                    <Input
+                      id="modalIsIntermittent"
+                      className=""
+                      onChange={() => this.setState({ isIntermittent: !isIntermittent })}
+                      type="checkbox"
+                      checked={isIntermittent}
+                    />This is an intermittent failure
+                  </label>
+                </div>
+                <div id="modalRelatedBugs" className="d-inline-flex ml-2">
+                  <Input
                     id="blocksInput"
                     type="text"
                     onChange={evt => this.setState({ blocks: evt.target.value })}
@@ -546,9 +558,10 @@ export default class BugFiler extends React.Component {
                     isOpen={tooltipOpen.blocksInput}
                     toggle={() => this.toggleTooltip('blocksInput')}
                   >Comma-separated list of bugs</Tooltip>
-                  <input
-                    type="text"
+                  <Input
                     id="dependsOn"
+                    type="text"
+                    className="ml-1"
                     onChange={evt => this.setState({ dependsOn: evt.target.value })}
                     placeholder="Depends on"
                   />
@@ -558,8 +571,9 @@ export default class BugFiler extends React.Component {
                     isOpen={tooltipOpen.dependsOn}
                     toggle={() => this.toggleTooltip('dependsOn')}
                   >Comma-separated list of bugs</Tooltip>
-                  <input
+                  <Input
                     id="seeAlso"
+                    className="ml-1"
                     type="text"
                     onChange={evt => this.setState({ seeAlso: evt.target.value })}
                     placeholder="See also"
@@ -572,18 +586,21 @@ export default class BugFiler extends React.Component {
                   >Comma-separated list of bugs</Tooltip>
                 </div>
 
-                {!!crashSignatures.length && <div id="modalCrashSignatureDiv">
-                  <label
-                    id="modalCrashSignatureLabel"
-                    htmlFor="modalCrashSignature"
-                  >Signature:</label>
-                  <textarea
-                    id="modalCrashSignature"
-                    onChange={evt => this.setState({ crashSignatures: evt.target.value })}
-                    maxLength="2048"
-                  />
-                </div>}
               </div>
+              {!!crashSignatures.length && <div id="modalCrashSignatureDiv">
+                <label
+                  id="modalCrashSignatureLabel"
+                  htmlFor="modalCrashSignature"
+                >Signature:</label>
+                <Input
+                  id="modalCrashSignature"
+                  type="textarea"
+                  onChange={evt => this.setState({ crashSignatures: evt.target.value })}
+                  maxLength="2048"
+                  readOnly
+                  value={crashSignatures.join('\n')}
+                />
+              </div>}
             </form>
           </ModalBody>
           <ModalFooter>
